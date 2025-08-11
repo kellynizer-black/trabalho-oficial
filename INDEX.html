@@ -34,7 +34,7 @@
       box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
       position: relative;
       overflow: hidden;
-      z-index: 1;
+      z-index: 10; /* maior que as imagens */
       text-align: center;
     }
 
@@ -46,10 +46,20 @@
       pointer-events: none;
       user-select: none;
       filter: drop-shadow(0 0 3px #ff1a1a);
+      z-index: 1; /* menor que quiz-container */
     }
 
     .decor-ladybug { top: 10px; left: 10px; transform: rotate(-10deg); }
     .decor-chat { bottom: 10px; right: 10px; transform: rotate(15deg); }
+
+    #start-screen {
+      background-color: #330000; /* fundo escuro para destacar */
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #ff4d6d;
+      display: block;
+      margin-bottom: 20px;
+    }
 
     .question {
       font-size: 22px;
