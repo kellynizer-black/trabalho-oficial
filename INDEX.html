@@ -1,192 +1,198 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Quiz Miraculous</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      font-family: 'Arial', sans-serif;
-      background-color: #8B0000;
-      background-image:
-        radial-gradient(circle at 10% 20%, black 4px, transparent 5px),
-        radial-gradient(circle at 40% 50%, black 5px, transparent 6px),
-        radial-gradient(circle at 70% 30%, black 3px, transparent 4px),
-        radial-gradient(circle at 80% 80%, black 6px, transparent 7px),
-        radial-gradient(circle at 20% 75%, black 5px, transparent 6px);
-      background-repeat: repeat;
-      background-size: 150px 150px;
-      color: #f0f6fc;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      position: relative;
-    }
+<meta charset="UTF-8" />
+<title>Quiz Miraculous</title>
+<style>
+  /* Fundo vermelho mais suave com bolinhas pretas */
+  body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Arial', sans-serif;
+    background-color: #8B0000; /* vermelho escuro */
+    background-image:
+      radial-gradient(circle at 10% 20%, black 4px, transparent 5px),
+      radial-gradient(circle at 40% 50%, black 5px, transparent 6px),
+      radial-gradient(circle at 70% 30%, black 3px, transparent 4px),
+      radial-gradient(circle at 80% 80%, black 6px, transparent 7px),
+      radial-gradient(circle at 20% 75%, black 5px, transparent 6px);
+    background-repeat: repeat;
+    background-size: 150px 150px;
+    color: #f0f6fc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+  }
 
-    .quiz-container {
-      background-color: #1a1a1a;
-      padding: 30px 40px 40px 40px;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 650px;
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
-      position: relative;
-      overflow: hidden;
-      z-index: 10; /* maior que as imagens */
-      text-align: center;
-    }
+  .quiz-container {
+    background-color: #1a1a1a;
+    padding: 30px 40px 40px 40px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 650px;
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    z-index: 10;
+  }
 
-    .decor-ladybug,
-    .decor-chat {
-      position: absolute;
-      width: 100px;
-      opacity: 0.15;
-      pointer-events: none;
-      user-select: none;
-      filter: drop-shadow(0 0 3px #ff1a1a);
-      z-index: 1; /* menor que quiz-container */
-    }
+  /* Imagens decorativas */
+  .decor-ladybug,
+  .decor-chat {
+    position: absolute;
+    width: 100px;
+    opacity: 0.15;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 0 3px #ff1a1a);
+    z-index: 1;
+  }
+  .decor-ladybug {
+    top: 10px;
+    left: 10px;
+    transform: rotate(-10deg);
+  }
+  .decor-chat {
+    bottom: 10px;
+    right: 10px;
+    transform: rotate(15deg);
+  }
 
-    .decor-ladybug { top: 10px; left: 10px; transform: rotate(-10deg); }
-    .decor-chat { bottom: 10px; right: 10px; transform: rotate(15deg); }
+  .question {
+    font-size: 22px;
+    margin-bottom: 25px;
+    color: #ff4d6d;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px #990000;
+  }
 
-    #start-screen {
-      background-color: #330000; /* fundo escuro para destacar */
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px #ff4d6d;
-      display: block;
-      margin-bottom: 20px;
-    }
+  button {
+    background-color: #ff4d6d;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    margin: 8px 0;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 17px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 8px rgba(255, 77, 109, 0.3);
+  }
+  button:hover {
+    background-color: #ff1a3c;
+    transform: scale(1.05);
+    box-shadow: 0 6px 14px rgba(255, 26, 60, 0.6);
+  }
 
-    .question {
-      font-size: 22px;
-      margin-bottom: 25px;
-      color: #ff4d6d;
-      font-weight: 600;
-      text-shadow: 1px 1px 2px #990000;
-    }
-
-    .options button, .start-btn, .restart-btn {
-      background-color: #ff4d6d;
-      color: white;
-      border: none;
-      padding: 12px 18px;
-      margin: 8px 0;
-      width: 100%;
-      border-radius: 8px;
-      font-size: 17px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      box-shadow: 0 4px 8px rgba(255, 77, 109, 0.3);
-    }
-
-    .options button:hover, .start-btn:hover, .restart-btn:hover {
-      background-color: #ff1a3c;
-      transform: scale(1.05);
-      box-shadow: 0 6px 14px rgba(255, 26, 60, 0.6);
-    }
-
-    #result {
-      font-size: 20px;
-      margin-top: 25px;
-      text-align: center;
-      color: #ffd1dc;
-      font-weight: 700;
-      text-shadow: 1px 1px 3px #990000;
-    }
-  </style>
+  #result {
+    font-size: 20px;
+    margin-top: 25px;
+    text-align: center;
+    color: #ffd1dc;
+    font-weight: 700;
+    text-shadow: 1px 1px 3px #990000;
+  }
+</style>
 </head>
 <body>
   <div class="quiz-container">
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Ladybug_icon.svg/120px-Ladybug_icon.svg.png" alt="Ladybug" class="decor-ladybug" />
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Chat_noir_icon.svg/120px-Chat_noir_icon.svg.png" alt="Chat Noir" class="decor-chat" />
 
+    <!-- Tela inicial -->
     <div id="start-screen">
       <h2>Quiz Miraculous 🐞</h2>
-      <button class="start-btn">Começar</button>
+      <button id="start-btn">Começar</button>
     </div>
 
+    <!-- Quiz -->
     <div id="quiz" style="display:none;">
       <div class="question" id="question"></div>
       <div class="options" id="options"></div>
     </div>
 
+    <!-- Resultado -->
     <div id="result" style="display:none;"></div>
-    <button id="restart-btn" class="restart-btn" style="display:none;">Recomeçar</button>
+
+    <!-- Botão Recomeçar -->
+    <button id="restart-btn" style="display:none;">Recomeçar</button>
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const quiz = [
-        { question: "Quem foi a primeira portadora do Miraculous da Joaninha a aparecer na série?", options: ["Marinette", "Joana d'Arc", "Tikki", "Kagami"], answer: "Joana d'Arc" },
-        { question: "No especial de Xangai, qual o nome da heroína que ajuda a Ladybug?", options: ["Chloé", "Alya", "Alix", "Fei Wu"], answer: "Fei Wu" },
-        { question: "Qual a senha para entrar na caixa de Miraculous no quartel de Master Fu?", options: ["16253648", "12345678", "87654321", "16243649"], answer: "16253648" },
-        { question: "Quem é a primeira pessoa, além de Master Fu, que Marinette revela sua identidade?", options: ["Chat Noir", "Adrien Agreste", "Alya Césaire", "Sabine Cheng"], answer: "Alya Césaire" },
-        { question: "Qual a data de aniversário do Adrien Agreste?", options: ["9 de julho", "5 de julho", "10 de setembro", "2 de agosto"], answer: "5 de julho" }
-      ];
+    const quiz = [
+      { question: "Quem foi a primeira portadora do Miraculous da Joaninha a aparecer na série?", options: ["Marinette", "Joana d'Arc", "Tikki", "Kagami"], answer: "Joana d'Arc" },
+      { question: "No especial de Xangai, qual o nome da heroína que ajuda a Ladybug?", options: ["Chloé", "Alya", "Alix", "Fei Wu"], answer: "Fei Wu" },
+      { question: "Qual a senha para entrar na caixa de Miraculous no quartel de Master Fu?", options: ["16253648", "12345678", "87654321", "16243649"], answer: "16253648" },
+      { question: "Quem é a primeira pessoa, além de Master Fu, que Marinette revela sua identidade?", options: ["Chat Noir", "Adrien Agreste", "Alya Césaire", "Sabine Cheng"], answer: "Alya Césaire" },
+      { question: "Qual a data de aniversário do Adrien Agreste?", options: ["9 de julho", "5 de julho", "10 de setembro", "2 de agosto"], answer: "5 de julho" }
+    ];
 
-      let currentQuestion = 0;
-      let score = 0;
+    let currentQuestion = 0;
+    let score = 0;
 
-      const startScreen = document.getElementById("start-screen");
-      const startBtn = startScreen.querySelector(".start-btn");
-      const quizEl = document.getElementById("quiz");
-      const questionEl = document.getElementById("question");
-      const optionsEl = document.getElementById("options");
-      const resultEl = document.getElementById("result");
-      const restartBtn = document.getElementById("restart-btn");
+    // Elementos DOM
+    const startScreen = document.getElementById("start-screen");
+    const startBtn = document.getElementById("start-btn");
+    const quizDiv = document.getElementById("quiz");
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const resultEl = document.getElementById("result");
+    const restartBtn = document.getElementById("restart-btn");
 
-      function showQuestion() {
-        const q = quiz[currentQuestion];
-        questionEl.textContent = q.question;
-        optionsEl.innerHTML = "";
-        q.options.forEach(option => {
-          const btn = document.createElement("button");
-          btn.textContent = option;
-          btn.onclick = () => selectAnswer(option);
-          optionsEl.appendChild(btn);
-        });
+    function startQuiz() {
+      startScreen.style.display = "none";
+      quizDiv.style.display = "block";
+      resultEl.style.display = "none";
+      restartBtn.style.display = "none";
+      currentQuestion = 0;
+      score = 0;
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = quiz[currentQuestion];
+      questionEl.textContent = q.question;
+      optionsEl.innerHTML = "";
+      q.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.textContent = option;
+        btn.onclick = () => selectAnswer(option);
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(selected) {
+      if (selected === quiz[currentQuestion].answer) {
+        score++;
       }
-
-      function selectAnswer(selected) {
-        if (selected === quiz[currentQuestion].answer) {
-          score++;
-        }
-        currentQuestion++;
-        if (currentQuestion < quiz.length) {
-          showQuestion();
-        } else {
-          showResult();
-        }
-      }
-
-      function showResult() {
-        quizEl.style.display = "none";
-        resultEl.style.display = "block";
-        resultEl.innerHTML = `🎉 Você terminou o quiz!<br>Sua pontuação: <strong>${score}/${quiz.length}</strong>`;
-        restartBtn.style.display = "block";
-      }
-
-      function startQuiz() {
-        startScreen.style.display = "none";
-        resultEl.style.display = "none";
-        restartBtn.style.display = "none";
-        quizEl.style.display = "block";
-        currentQuestion = 0;
-        score = 0;
+      currentQuestion++;
+      if (currentQuestion < quiz.length) {
         showQuestion();
+      } else {
+        showResult();
       }
+    }
 
-      function restartQuiz() {
-        startQuiz();
-      }
+    function showResult() {
+      quizDiv.style.display = "none";
+      resultEl.style.display = "block";
+      resultEl.innerHTML = `🎉 Você terminou o quiz!<br>Sua pontuação: <strong>${score} / ${quiz.length}</strong>`;
+      restartBtn.style.display = "block";
+    }
 
-      startBtn.addEventListener("click", startQuiz);
-      restartBtn.addEventListener("click", restartQuiz);
-    });
+    function restartQuiz() {
+      startScreen.style.display = "block";
+      resultEl.style.display = "none";
+      restartBtn.style.display = "none";
+      quizDiv.style.display = "none";
+    }
+
+    startBtn.addEventListener("click", startQuiz);
+    restartBtn.addEventListener("click", restartQuiz);
   </script>
 </body>
 </html>
