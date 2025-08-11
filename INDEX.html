@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz Miraculous</title>
+  <style>
+    /* Fundo vermelho mais suave e bolinhas pretas mais "aleatórias" */
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: 'Arial', sans-serif;
+      background-color: #8B0000; /* vermelho escuro */
+      background-image:
+        radial-gradient(circle at 10% 20%, black 4px, transparent 5px),
+        radial-gradient(circle at 40% 50%, black 5px, transparent 6px),
+        radial-gradient(circle at 70% 30%, black 3px, transparent 4px),
+        radial-gradient(circle at 80% 80%, black 6px, transparent 7px),
+        radial-gradient(circle at 20% 75%, black 5px, transparent 6px);
+      background-repeat: repeat;
+      background-size: 150px 150px;
+      color: #f0f6fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative; /* Necessário para posicionar as imagens */
+    }
+
+    .quiz-container {
+      background-color: #1a1a1a; /* cinza bem escuro */
+      padding: 30px 40px 40px 40px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 650px;
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    /* Imagens decorativas (Ladybug e Chat Noir) */
+    .decor-ladybug,
+    .decor-chat {
+      position: absolute;
+      width: 100px; /* Aumentei o tamanho das imagens */
+      opacity: 0.15;
+      pointer-events: none;
+      user-select: none;
+      filter: drop-shadow(0 0 3px #ff1a1a);
+    }
+
+    .decor-ladybug {
+      top: 10px;
+      left: 10px;
+      transform: rotate(-10deg);
+    }
+
+    .decor-chat {
+      bottom: 10px;
+      right: 10px;
+      transform: rotate(15deg);
+    }
+
+    .question {
+      font-size: 22px;
+      margin-bottom: 25px;
+      color: #ff4d6d; /* rosa/vermelho Miraculous */
+      font-weight: 600;
+      text-shadow: 1px 1px 2px #990000;
+    }
+
+    .options button {
+      background-color: #ff4d6d; /* rosa/vermelho vibrante */
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      margin: 8px 0;
+      width: 100%;
+      border-radius: 8px;
+      font-size: 17px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      box-shadow: 0 4px 8px rgba(255, 77, 109, 0.3);
+    }
+
+    .options button:hover {
+      background-color: #ff1a3c;
+      transform: scale(1.05);
+      box-shadow: 0 6px 14px rgba(255, 26, 60, 0.6);
+    }
+
+    #result {
+      font-size: 20px;
+      margin-top: 25px;
+      text-align: center;
+      color: #ffd1dc;
+      font-weight: 700;
+      text-shadow: 1px 1px 3px #990000;
+    }
+
+    /* Animação para as imagens de fundo */
+    .quiz-container:hover .decor-ladybug {
+      opacity: 0.25;
+    }
+
+    .quiz-container:hover .decor-chat {
+      opacity: 0.25;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <!-- Adicionando imagens decorativas -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Ladybug_icon.svg/120px-Ladybug_icon.svg.png" alt="Ladybug" class="decor-ladybug" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Chat_noir_icon.svg/120px-Chat_noir_icon.svg.png" alt="Chat Noir" class="decor-chat" />
+
+    <div id="quiz">
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const quiz = [
+      {
+        question: "Quem foi a primeira portadora do Miraculous da Joaninha a aparecer na série?",
+        options: ["Marinette", "Joana d'Arc", "Tikki", "Kagami"],
+        answer: "Joana d'Arc"
+      },
+      {
+        question: "No especial de Xangai, qual o nome da heroína que ajuda a Ladybug?",
+        options: ["Chloé", "Alya", "Alix", "Fei Wu"],
+        answer: "Fei Wu"
+      },
+      {
+        question: "Qual a senha para entrar na caixa de Miraculous no quartel de Master Fu?",
+        options: ["16253648", "12345678", "87654321", "16243649"],
+        answer: "16253648"
+      },
+      {
+        question: "Quem é a primeira pessoa, além de Master Fu, que Marinette revela sua identidade?",
+        options: ["Chat Noir", "Adrien Agreste", "Alya Césaire", "Sabine Cheng"],
+        answer: "Alya Césaire"
+      },
+      {
+        question: "Qual a data de aniversário do Adrien Agreste?",
+        options: ["9 de julho", "5 de julho", "10 de setembro", "2 de agosto"],
+        answer: "5 de julho"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const resultEl = document.getElementById("result");
+
+    function showQuestion() {
+      const q = quiz[currentQuestion];
+      questionEl.textContent = q.question;
+      optionsEl.innerHTML = "";
+      q.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.textContent = option;
+        btn.onclick = () => selectAnswer(option);
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(selected) {
+      const correct = quiz[currentQuestion].answer;
+      if (selected === correct) {
+        score++;
+      }
+      currentQuestion++;
+      if (currentQuestion < quiz.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      document.getElementById("quiz").style.display = "none";
+      resultEl.innerHTML = `🎉 Você terminou o quiz!<br>Sua pontuação: <strong>${score}/${quiz.length}</strong>`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
