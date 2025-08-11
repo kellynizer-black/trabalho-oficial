@@ -56,4 +56,127 @@
       margin-bottom: 25px;
       color: #ff4d6d;
       font-weight: 600;
-      text-shadow: 1px 1px 2px #990
+      text-shadow: 1px 1px 2px #990000;
+    }
+
+    .options button, .start-btn, .restart-btn {
+      background-color: #ff4d6d;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      margin: 8px 0;
+      width: 100%;
+      border-radius: 8px;
+      font-size: 17px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      box-shadow: 0 4px 8px rgba(255, 77, 109, 0.3);
+    }
+
+    .options button:hover, .start-btn:hover, .restart-btn:hover {
+      background-color: #ff1a3c;
+      transform: scale(1.05);
+      box-shadow: 0 6px 14px rgba(255, 26, 60, 0.6);
+    }
+
+    #result {
+      font-size: 20px;
+      margin-top: 25px;
+      text-align: center;
+      color: #ffd1dc;
+      font-weight: 700;
+      text-shadow: 1px 1px 3px #990000;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Ladybug_icon.svg/120px-Ladybug_icon.svg.png" alt="Ladybug" class="decor-ladybug" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Chat_noir_icon.svg/120px-Chat_noir_icon.svg.png" alt="Chat Noir" class="decor-chat" />
+
+    <div id="start-screen">
+      <h2>Quiz Miraculous 🐞</h2>
+      <button class="start-btn">Começar</button>
+    </div>
+
+    <div id="quiz" style="display:none;">
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
+    </div>
+
+    <div id="result" style="display:none;"></div>
+    <button id="restart-btn" class="restart-btn" style="display:none;">Recomeçar</button>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const quiz = [
+        { question: "Quem foi a primeira portadora do Miraculous da Joaninha a aparecer na série?", options: ["Marinette", "Joana d'Arc", "Tikki", "Kagami"], answer: "Joana d'Arc" },
+        { question: "No especial de Xangai, qual o nome da heroína que ajuda a Ladybug?", options: ["Chloé", "Alya", "Alix", "Fei Wu"], answer: "Fei Wu" },
+        { question: "Qual a senha para entrar na caixa de Miraculous no quartel de Master Fu?", options: ["16253648", "12345678", "87654321", "16243649"], answer: "16253648" },
+        { question: "Quem é a primeira pessoa, além de Master Fu, que Marinette revela sua identidade?", options: ["Chat Noir", "Adrien Agreste", "Alya Césaire", "Sabine Cheng"], answer: "Alya Césaire" },
+        { question: "Qual a data de aniversário do Adrien Agreste?", options: ["9 de julho", "5 de julho", "10 de setembro", "2 de agosto"], answer: "5 de julho" }
+      ];
+
+      let currentQuestion = 0;
+      let score = 0;
+
+      const startScreen = document.getElementById("start-screen");
+      const startBtn = startScreen.querySelector(".start-btn");
+      const quizEl = document.getElementById("quiz");
+      const questionEl = document.getElementById("question");
+      const optionsEl = document.getElementById("options");
+      const resultEl = document.getElementById("result");
+      const restartBtn = document.getElementById("restart-btn");
+
+      function showQuestion() {
+        const q = quiz[currentQuestion];
+        questionEl.textContent = q.question;
+        optionsEl.innerHTML = "";
+        q.options.forEach(option => {
+          const btn = document.createElement("button");
+          btn.textContent = option;
+          btn.onclick = () => selectAnswer(option);
+          optionsEl.appendChild(btn);
+        });
+      }
+
+      function selectAnswer(selected) {
+        if (selected === quiz[currentQuestion].answer) {
+          score++;
+        }
+        currentQuestion++;
+        if (currentQuestion < quiz.length) {
+          showQuestion();
+        } else {
+          showResult();
+        }
+      }
+
+      function showResult() {
+        quizEl.style.display = "none";
+        resultEl.style.display = "block";
+        resultEl.innerHTML = `🎉 Você terminou o quiz!<br>Sua pontuação: <strong>${score}/${quiz.length}</strong>`;
+        restartBtn.style.display = "block";
+      }
+
+      function startQuiz() {
+        startScreen.style.display = "none";
+        resultEl.style.display = "none";
+        restartBtn.style.display = "none";
+        quizEl.style.display = "block";
+        currentQuestion = 0;
+        score = 0;
+        showQuestion();
+      }
+
+      function restartQuiz() {
+        startQuiz();
+      }
+
+      startBtn.addEventListener("click", startQuiz);
+      restartBtn.addEventListener("click", restartQuiz);
+    });
+  </script>
+</body>
+</html>
