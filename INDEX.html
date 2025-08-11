@@ -1,86 +1,151 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Quiz Miraculous</title>
-  <style>
+<meta charset="UTF-8">
+<title>Quiz Miraculous Ladybug</title>
+<style>
     body {
-      margin: 0;
-      height: 100vh;
-      font-family: 'Arial', sans-serif;
-      background-color: #8B0000;
-      background-image:
-        radial-gradient(circle at 10% 20%, black 4px, transparent 5px),
-        radial-gradient(circle at 40% 50%, black 5px, transparent 6px),
-        radial-gradient(circle at 70% 30%, black 3px, transparent 4px),
-        radial-gradient(circle at 80% 80%, black 6px, transparent 7px),
-        radial-gradient(circle at 20% 75%, black 5px, transparent 6px);
-      background-repeat: repeat;
-      background-size: 150px 150px;
-      color: #f0f6fc;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      position: relative;
+        font-family: Arial, sans-serif;
+        background-color: #ff4d4d;
+        background-image: radial-gradient(black 10%, transparent 11%);
+        background-size: 30px 30px;
+        color: white;
+        text-align: center;
+        padding: 0;
+        margin: 0;
+    }
+    h1 {
+        margin-top: 10px;
+    }
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background: rgba(0,0,0,0.6);
+        padding: 20px;
+        border-radius: 20px;
+    }
+    button {
+        background-color: #000;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin-top: 15px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+    button:hover {
+        background-color: #333;
+    }
+    .hidden {
+        display: none;
+    }
+    img {
+        max-width: 200px;
+        margin: 10px auto;
+        display: block;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Ladybug no topo -->
+    <img src="data:image/png;base64,INSIRA_AQUI_BASE64_DA_LADYBUG" alt="Ladybug">
+    <h1>Quiz Miraculous Ladybug</h1>
+    
+    <!-- Botão de início -->
+    <div id="startScreen">
+        <button onclick="startQuiz()">Iniciar Quiz</button>
+    </div>
+
+    <!-- Perguntas -->
+    <div id="quizScreen" class="hidden">
+        <div id="question"></div>
+        <div id="answers"></div>
+        <button onclick="nextQuestion()">Próxima</button>
+    </div>
+
+    <!-- Tela final -->
+    <div id="endScreen" class="hidden">
+        <h2>Quiz finalizado!</h2>
+        <p id="score"></p>
+        <!-- Chat Noir no final -->
+        <img src="data:image/png;base64,INSIRA_AQUI_BASE64_DO_CHATNOIR" alt="Chat Noir">
+        <button onclick="restartQuiz()">Recomeçar</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "Qual é a identidade secreta da Ladybug?",
+            answers: ["Marinette Dupain-Cheng", "Alya Césaire", "Chloé Bourgeois"],
+            correct: 0
+        },
+        {
+            question: "Qual é o nome verdadeiro do Chat Noir?",
+            answers: ["Adrien Agreste", "Nino Lahiffe", "Luka Couffaine"],
+            correct: 0
+        },
+        {
+            question: "Qual é o kwami da Ladybug?",
+            answers: ["Plagg", "Tikki", "Nooroo"],
+            correct: 1
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function startQuiz() {
+        document.getElementById("startScreen").classList.add("hidden");
+        document.getElementById("quizScreen").classList.remove("hidden");
+        showQuestion();
     }
 
-    .quiz-container {
-      background-color: #1a1a1a;
-      padding: 30px 40px 40px 40px;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 650px;
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
-      z-index: 1;
-      text-align: center;
+    function showQuestion() {
+        let q = questions[currentQuestion];
+        document.getElementById("question").innerHTML = `<h2>${q.question}</h2>`;
+        let answersDiv = document.getElementById("answers");
+        answersDiv.innerHTML = "";
+        q.answers.forEach((ans, index) => {
+            let btn = document.createElement("button");
+            btn.innerText = ans;
+            btn.onclick = () => checkAnswer(index);
+            answersDiv.appendChild(btn);
+        });
     }
 
-    /* Imagens decorativas */
-    .decor-ladybug,
-    .decor-chat {
-      position: absolute;
-      width: 180px;
-      opacity: 0.25;
-      pointer-events: none;
-      user-select: none;
-      z-index: 0;
+    function checkAnswer(index) {
+        if (index === questions[currentQuestion].correct) {
+            score++;
+        }
+        document.querySelectorAll("#answers button").forEach(b => b.disabled = true);
     }
 
-    .decor-ladybug {
-      top: 20px;
-      left: 20px;
+    function nextQuestion() {
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            showQuestion();
+        } else {
+            endQuiz();
+        }
     }
 
-    .decor-chat {
-      bottom: 20px;
-      right: 20px;
+    function endQuiz() {
+        document.getElementById("quizScreen").classList.add("hidden");
+        document.getElementById("endScreen").classList.remove("hidden");
+        document.getElementById("score").innerText = `Você acertou ${score} de ${questions.length} perguntas!`;
     }
 
-    .question {
-      font-size: 22px;
-      margin-bottom: 25px;
-      color: #ff4d6d;
-      font-weight: 600;
-      text-shadow: 1px 1px 2px #990000;
+    function restartQuiz() {
+        currentQuestion = 0;
+        score = 0;
+        document.getElementById("endScreen").classList.add("hidden");
+        document.getElementById("startScreen").classList.remove("hidden");
     }
+</script>
 
-    .options button, .start-btn, .restart-btn {
-      background-color: #ff4d6d;
-      color: white;
-      border: none;
-      padding: 12px 18px;
-      margin: 8px 0;
-      width: 100%;
-      border-radius: 8px;
-      font-size: 17px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      box-shadow: 0 4px 8px rgba(255, 77, 109, 0.3);
-    }
-
-    .options button:hover, .start-btn:hover, .restart-btn:hover {
-      background-color: #ff1a3c;
-      transform: scale(1.05);
-      box-shadow: 0 6px 14px rgba(255, 26, 60, 0.6);
-    }
+</body>
+</html>
